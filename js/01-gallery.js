@@ -1,24 +1,4 @@
 import { galleryItems } from "./gallery-items.js";
-// Change code below this line
-
-// {
-//     preview:
-//       'https://cdn.pixabay.com/photo/2019/05/14/16/43/himilayan-blue-poppy-4202825__340.jpg',
-//     original:
-//       'https://cdn.pixabay.com/photo/2019/05/14/16/43/himilayan-blue-poppy-4202825_1280.jpg',
-//     description: 'Hokkaido Flower',
-//   },
-
-/* <div class="gallery__item">
-  <a class="gallery__link" href="large-image.jpg">
-    <img
-      class="gallery__image"
-      src="small-image.jpg"
-      data-source="large-image.jpg"
-      alt="Image description"
-    />
-  </a>
-</div>; */
 
 const gallery = document.querySelector(".gallery");
 
@@ -42,16 +22,30 @@ function createGalleryMarkup(object) {
   gallery.insertAdjacentHTML("beforeend", markup);
 }
 
-gallery.addEventListener("click", selectImg);
-function selectImg(evt) {
+const onGalleryImgClick = (evt) => {
   evt.preventDefault();
-  basicLightbox
-    .create(
-      `
+  if (evt.target.nodeName !== "IMG") {
+    return;
+  }
+  const bigImg = basicLightbox.create(
+    `
 		<img width="1400" height="900" src="${evt.target.dataset.source}">
-	`
-    )
-    .show();
-}
-
-// console.log(basicLightbox);
+	`,
+    {
+      onShow: (bigImg) => {
+        document.addEventListener("keydown", onEscapeKeyDown);
+      },
+      onClose: (bigImg) => {
+        document.removeEventListener("keydown", onEscapeKeyDown);
+      },
+    }
+  );
+  bigImg.show();
+  function onEscapeKeyDown(event) {
+    if (event.code !== "Escape") {
+      return;
+    }
+    bigImg.close();
+  }
+};
+gallery.addEventListener("click", onGalleryImgClick);
