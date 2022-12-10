@@ -3,12 +3,6 @@ import { galleryItems } from "./gallery-items.js";
 
 const gallery = document.querySelector(".gallery");
 
-{
-  /* <a class="gallery__item" href="large-image.jpg">
-  <img class="gallery__image" src="small-image.jpg" alt="Image description" />
-</a>; */
-}
-
 createGalleryMarkup(galleryItems);
 function createGalleryMarkup(object) {
   const markup = object.reduce(
@@ -22,4 +16,9 @@ function createGalleryMarkup(object) {
   gallery.insertAdjacentHTML("beforeend", markup);
 }
 
-let galleryLightbox = new SimpleLightbox(".gallery a");
+let galleryLightbox = new SimpleLightbox(".gallery a", {
+  captionsData: "alt",
+  captionDelay: 250,
+});
+
+//
